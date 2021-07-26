@@ -1,0 +1,26 @@
+{
+  "slug": "AllLoops",
+  "name": "All Loops",
+  "version": "1.0.1",
+  "license": "GPL-3.0-or-later",
+  "brand": "sainsay",
+  "author": "Jens Hagen",
+  "authorEmail": "hagen-j@outlook.com",
+  "authorUrl": "jens-hagen.com",
+  "pluginUrl": "",
+  "manualUrl": "",
+  "sourceUrl": "https://github.com/sainsay/AllLoops",
+  "donateUrl": "",
+  "changelogUrl": "",
+  "modules": [
+    {
+      "slug": "Infinight",
+      "name": "Infinight",
+      "description": "Stereo looper with fixed random size\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Cly\u001b[C\u001b[C size buffers",
+      "tags": [
+        "Recording",
+        "Sampler"
+      ]
+    }
+  ]
+}
