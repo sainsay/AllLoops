@@ -1,53 +1,24 @@
+#include "Infinight.hpp"
+
 #include "plugin.hpp"
 
-struct Infinight : Module
+using namespace rack;
+
+Infinight::Infinight()
 {
-	enum ParamIds
-	{
-		PITCH_PARAM,
-		NUM_PARAMS
-	};
-	enum InputIds
-	{
-		L_INPUT,
-		R_INPUT,
-		L_LOOP_INPUT,
-		R_LOOP_INPUT,
-		NUM_INPUTS
-	};
-	enum OutputIds
-	{
-		L_OUTPUT,
-		R_OUTPUT,
-		L_LOOP_OUTPUT,
-		R_LOOP_OUTPUT,
-		NUM_OUTPUTS
-	};
-	enum LightIds
-	{
-		BLINK_LIGHT,
-		NUM_LIGHTS
-	};
+	config( NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS );
+	configParam( PITCH_PARAM, 0.f, 1.f, 0.f, "" );	
+	
+}
 
-	Infinight( )
-	{
-		config( NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS );
-		configParam( PITCH_PARAM, 0.f, 1.f, 0.f, "" );
-	}
-
-	void process( const ProcessArgs &args ) override
-	{
-		
-
-
-	}
-};
-
-struct InfinightWidget : ModuleWidget
+void Infinight::process(const ProcessArgs& args)
 {
-	InfinightWidget( Infinight *module )
-	{
-		setModule( module );
+
+}
+
+InfinightWidget::InfinightWidget(Infinight* module)
+{
+	setModule( module );
 		setPanel( APP->window->loadSvg(
 				asset::plugin( pluginInstance, "res/Infinight.svg" ) ) );
 
@@ -78,8 +49,4 @@ struct InfinightWidget : ModuleWidget
 				mm2px( Vec( 24.00, 92.00 ) ), module, Infinight::L_LOOP_OUTPUT ) );
 		addOutput( createOutputCentered<PJ301MPort>(
 				mm2px( Vec( 24.00, 104.00 ) ), module, Infinight::R_LOOP_OUTPUT ) );
-
-	}
-};
-
-Model *modelInfinight = createModel<Infinight, InfinightWidget>( "Infinight" );
+}
