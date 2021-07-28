@@ -16,7 +16,7 @@
     {
       "slug": "Infinight",
       "name": "Infinight",
-      "description": "Stereo looper with fixed random size\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Cly\u001b[C\u001b[C size buffers",
+      "description": "4 fixed lenght loopers. Each with a sight difference in lenght",
       "tags": [
         "Recording",
         "Sampler"

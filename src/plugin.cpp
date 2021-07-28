@@ -1,6 +1,6 @@
 #include "plugin.hpp"
 
-#include "infinight.hpp"
+#include "Infinight.hpp"
 
 using namespace rack;
 
