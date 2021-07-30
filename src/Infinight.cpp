@@ -44,13 +44,31 @@ void Infinight::process(const ProcessArgs& args)
 	float T2_InputSample = inputs[T2_INPUT].getVoltage();
 
 	sain::Looper::Sample wet;
+	uint32_t ChannelNumber = 0;
+
 	for(auto& looper : Loopers)
 	{
-		wet += looper.ReadSample();
-		auto temp = looper.ReadSample(); 
-		temp += {T1_InputSample, T2_InputSample};
-		looper.WriteSample( temp  );
+		sain::Looper::Sample ToWrite;
+		sain::Looper::Sample ToSend;
+
+		ToSend += looper.ReadSample();
+		wet += ToSend;
+
+		outputs[T1_SEND].setVoltage(ToSend.T1, ChannelNumber);
+		outputs[T2_SEND].setVoltage(ToSend.T2, ChannelNumber);
+
+		ToWrite.T1 = inputs[T1_RETURN].isConnected() ? inputs[T1_RETURN].getPolyVoltage(ChannelNumber) : looper.ReadSample().T1;
+		ToWrite.T2 = inputs[T2_RETURN].isConnected() ? inputs[T1_RETURN].getPolyVoltage(ChannelNumber) : looper.ReadSample().T2;
+
+		//TODO: explore more complex algorithm sidechain compression or simple crossfade?
+		// The Idea is to surpress current content to allow for new content to be introduced
+		ToWrite += { T1_InputSample, T2_InputSample };
+		
+		looper.WriteSample( ToWrite  );
+		
 		looper.Process();
+
+		++ChannelNumber;
 	}
 
 	float mix = params[MIX_PARAM].getValue();
@@ -60,11 +78,14 @@ void Infinight::process(const ProcessArgs& args)
 	
 	outputs[T1_OUTPUT].setVoltage(T1_out);
 	outputs[T2_OUTPUT].setVoltage(T2_out);
+
+	outputs[T1_SEND].setChannels(Loopers.size());
+	outputs[T2_SEND].setChannels(Loopers.size());
 }
 
 void Infinight::onSampleRateChange()
 {
-
+	SET_FLAG(Flags, InfinightFlags::SAMPLERATE_CHANGED);
 }
 
 void Infinight::onReset()
@@ -110,4 +131,6 @@ InfinightWidget::InfinightWidget(Infinight* module)
 				mm2px( Vec( 24.00, 92.00 ) ), module, Infinight::T1_SEND ) );
 		addOutput( createOutputCentered<PJ301MPort>(
 				mm2px( Vec( 24.00, 104.00 ) ), module, Infinight::T2_SEND ) );
+
+		//addParam( createParamCentered<>())
 }
