@@ -1,4 +1,5 @@
 # AllLoops
+![build status](https://github.com/sainsay/AllLoops/actions/workflows/build_plugin.yml/badge.svg?branch=master)
 ## Infinight
 4 fixed lenght loopers. 
 
