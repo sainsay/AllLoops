@@ -6,7 +6,7 @@ namespace sain
 {
 	constexpr size_t buffer_size = 1ull << 21ull;
 
-	enum LooperFlags : int8_t
+	enum class LooperFlags : int8_t
 	{
 		STATE_OK            = 0b0,
 		STATE_UNINITIALIZED = 1 << 0,
@@ -25,6 +25,31 @@ namespace sain
 		struct Sample
 		{
 			float T1 = 0.0f, T2 = 0.0f;
+            Sample() = default;
+
+            Sample(const float& valueT1, const float& valueT2) :
+                T1(valueT1),
+                T2(valueT2)
+            {}
+
+            Sample(const Sample& value) :
+                T1(value.T1),
+                T2(value.T2)
+            {}
+
+            Sample& operator=(const Sample& rhs)
+            {
+                this->T1 = rhs.T1;
+                this->T2 = rhs.T2;
+                return *this;
+            }
+
+            Sample& operator+=(const Sample& rhs)
+            {
+                this->T1 += rhs.T1;
+                this->T2 += rhs.T2;
+                return *this;
+            }
 		};
 
     private:
@@ -37,9 +62,9 @@ namespace sain
 
         const float LoopLenght;
 		float SampleRate	= 0.0f;
-		LooperFlags Flags = STATE_UNINITIALIZED;
+		LooperFlags Flags = LooperFlags::STATE_UNINITIALIZED;
 
-		bool Reverse = false;
+		bool ReverseState = false;
 
 	 public:
 		Looper( ) :
@@ -48,29 +73,24 @@ namespace sain
 
         Looper( const float lenght ) :
             LoopLenght(lenght)
-        {
-            
-        }
+        {}
 
-		void SetMain( float valueLeft, float valueRight );
-		void SetReturn( float valueLeft, float valueRight );
+		void WriteSample( float valueLeft, float valueRight );
+		void WriteSample( Sample value );
 
-		inline Sample GetMain( )
+		inline Sample ReadSample( )
 		{
 			return *Playhead;
 		}
 
-		inline void SetReverse( bool value )
+		inline void Reverse()
 		{
-			Reverse = value;
-			SET_FLAG(Flags, REQ_FLIP_DIR);
+			ReverseState = !ReverseState;
+			SET_FLAG(Flags, LooperFlags::REQ_FLIP_DIR);
 		}
 
-		inline void SetSampleRate( float value )
-		{
-			SampleRate = value;
-			SET_FLAG(Flags, STATE_UNINITIALIZED);
-		}
+		void SetSampleRate( float value );
+		
 
 		void Process( );
 	};

@@ -1,5 +1,5 @@
 
-#define FLAG_IS_SET(var, flag) ((var) & (flag)) != 0
+#define FLAG_IS_SET(var, flag) ((var) & (flag)) != static_cast<decltype(var)>(0)
 #define SET_FLAG(var, flag) var |= (flag) 
 #define CLEAR_FLAG(var, flag) var &= ~(flag)
 

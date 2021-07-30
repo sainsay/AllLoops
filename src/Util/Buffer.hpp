@@ -1,6 +1,8 @@
 #include <inttypes.h>
 #include <array>
 
+#include <iostream>
+
 namespace sain
 {
 	template <typename _Ty, size_t count>
@@ -14,6 +16,7 @@ namespace sain
 		typedef const _Ty& const_reference;
     
 		std::array<value_type, count> data;
+
     private:
 
         typedef typename std::array<_Ty, count>::iterator DataIterator;
@@ -42,6 +45,7 @@ namespace sain
                 this->it = rhs.it;
                 this->myRingBuffer = rhs.myRingBuffer;
             }
+
             RingBufferIterator& operator=(const RingBufferIterator& rhs)
             {
                 this->it = rhs.it;
@@ -100,7 +104,6 @@ namespace sain
             }
 		};
 
-
 	public:
 		using iterator = RingBufferIterator;
 
@@ -124,6 +127,10 @@ namespace sain
         iterator end()
         {
             return iterator(this, data.end());
+        }
+
+        void Clear(){
+            std::fill(data.begin(), data.end(), value_type());
         }
 
 	};
