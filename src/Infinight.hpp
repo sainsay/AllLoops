@@ -20,6 +20,8 @@ struct Infinight : rack::Module
 	enum ParamIds
 	{
 		MIX_PARAM,
+		IN_PARAM,
+		OUT_PARAM,
 		REVERSE_BTN_PARAM,
 		ARM_BTN_PARAM,
 		NUM_PARAMS
@@ -45,7 +47,7 @@ struct Infinight : rack::Module
 
 	enum LightIds
 	{
-		REVERSE_LIGHT,
+		ARM_LIGHT,
 		NUM_LIGHTS
 	};
 

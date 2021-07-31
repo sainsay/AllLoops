@@ -10,6 +10,8 @@ Infinight::Infinight()
 {
 	config( NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS );
 	configParam( MIX_PARAM, 0.f, 1.f, 0.5f, "Mix", "%", 0, 100 );
+	configParam( IN_PARAM, 0.f, 1.f, 1.0f, "Volume In", "%", 0, 100 );
+	configParam( OUT_PARAM, 0.f, 1.f, 1.0f, "Volume Out", "%", 0, 100 );
 	configParam( REVERSE_BTN_PARAM, 0.0f, 1.0f, 0.0f, "Reverse" );	
 	configParam( ARM_BTN_PARAM, 0.0f, 1.0f, 0.0f, "Arm/Disarm" );
 	
@@ -42,6 +44,11 @@ void Infinight::process(const ProcessArgs& args)
 
 	float T1_InputSample = inputs[T1_INPUT].getVoltage();
 	float T2_InputSample = inputs[T2_INPUT].getVoltage();
+
+	float inVolume = params[IN_PARAM].getValue();
+
+	T1_InputSample *= inVolume;
+	T2_InputSample *= inVolume;
 
 	sain::Looper::Sample wet;
 	uint32_t ChannelNumber = 0;
@@ -76,6 +83,10 @@ void Infinight::process(const ProcessArgs& args)
 	float T1_out = crossfade(T1_InputSample, wet.T1, mix);
 	float T2_out = crossfade(T2_InputSample, wet.T2, mix);
 	
+	float outVolume = params[OUT_PARAM].getValue();
+	T1_out *= outVolume;
+	T2_out *= outVolume;
+
 	outputs[T1_OUTPUT].setVoltage(T1_out);
 	outputs[T2_OUTPUT].setVoltage(T2_out);
 
@@ -115,22 +126,34 @@ InfinightWidget::InfinightWidget(Infinight* module)
 						 RACK_GRID_HEIGHT - RACK_GRID_WIDTH ) ) );
 
 		addInput( createInputCentered<PJ301MPort>(
-				mm2px( Vec( 7.00, 20.00 ) ), module, Infinight::T1_INPUT ) );
+				mm2px( Vec( 7.00, 33.80 ) ), module, Infinight::T1_INPUT ) );
 		addInput( createInputCentered<PJ301MPort>(
-				mm2px( Vec( 7.00, 32.00 ) ), module, Infinight::T2_INPUT ) );
+				mm2px( Vec( 7.00, 45.85 ) ), module, Infinight::T2_INPUT ) );
 		addInput( createInputCentered<PJ301MPort>(
-				mm2px( Vec( 7.00, 92.00 ) ), module, Infinight::T1_RETURN ) );
+				mm2px( Vec( 7.00, 96.90 ) ), module, Infinight::T1_RETURN ) );
 		addInput( createInputCentered<PJ301MPort>(
-				mm2px( Vec( 7.00, 104.00 ) ), module, Infinight::T2_RETURN ) );
+				mm2px( Vec( 7.00, 108.90 ) ), module, Infinight::T2_RETURN ) );
 
 		addOutput( createOutputCentered<PJ301MPort>(
-				mm2px( Vec( 24.00, 20.00 ) ), module, Infinight::T1_OUTPUT ) );
+				mm2px( Vec( 24.00, 33.80 ) ), module, Infinight::T1_OUTPUT ) );
 		addOutput( createOutputCentered<PJ301MPort>(
-				mm2px( Vec( 24.00, 32.00 ) ), module, Infinight::T2_OUTPUT ) );
+				mm2px( Vec( 24.00, 45.85 ) ), module, Infinight::T2_OUTPUT ) );
 		addOutput( createOutputCentered<PJ301MPort>(
-				mm2px( Vec( 24.00, 92.00 ) ), module, Infinight::T1_SEND ) );
+				mm2px( Vec( 24.00, 96.90 ) ), module, Infinight::T1_SEND ) );
 		addOutput( createOutputCentered<PJ301MPort>(
-				mm2px( Vec( 24.00, 104.00 ) ), module, Infinight::T2_SEND ) );
+				mm2px( Vec( 24.00, 108.90 ) ), module, Infinight::T2_SEND ) );
 
-		//addParam( createParamCentered<>())
+		addParam( createParamCentered<Trimpot>(
+				mm2px( Vec( 7.00, 22.40 ) ), module, Infinight::IN_PARAM ) );
+		addParam( createParamCentered<Trimpot>(
+				mm2px( Vec( 24.00, 22.40 ) ), module, Infinight::OUT_PARAM ) );
+		addParam( createParamCentered<Trimpot>(
+				mm2px( Vec( 15.50, 18.80 ) ), module, Infinight::MIX_PARAM ) );
+
+		addParam( createParamCentered<PB61303>(
+				mm2px( Vec( 15.40, 72.10 ) ), module, Infinight::ARM_BTN_PARAM ) );
+
+		addChild( createLightCentered<MediumLight<RedLight>>(
+				mm2px( Vec(15.40, 60.00 ) ), module, Infinight::ARM_LIGHT ) );
+
 }
