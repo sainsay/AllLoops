@@ -53,10 +53,11 @@ struct Infinight : rack::Module
 		NUM_LIGHTS
 	};
 
-    std::array<sain::Looper, LooperCount> Loopers = {	sain::Looper(2.5f), 
-											sain::Looper(2.3f),
-											sain::Looper(2.1f), 
-											sain::Looper(1.9f)};
+    std::array<sain::Looper, LooperCount> Loopers = {	
+		sain::Looper( 2.48f ), 
+		sain::Looper( 2.3f ),
+		sain::Looper( 2.13f ), 
+		sain::Looper( 1.91f ) };
 
 	rack::dsp::BooleanTrigger ArmTrigger;
 	rack::dsp::BooleanTrigger ReverseTrigger;
@@ -69,6 +70,7 @@ struct Infinight : rack::Module
 
 	bool ArmState = false;
 	bool PolyOut = false;
+	bool Reverse = false;
 
 	Infinight( );
 

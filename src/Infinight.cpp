@@ -256,11 +256,25 @@ void InfinightWidget::appendContextMenu(Menu* menu)
 {
 	auto* infinight = dynamic_cast<Infinight*>(module);
 
+	menu->addChild( new MenuLabel() );
 	menu->addChild( 
 		new BoolMenuItem( 
 			"Use polyphonic out", 
 			[infinight](){ infinight->PolyOut = !infinight->PolyOut; }, 
 			[infinight](){ return infinight->PolyOut; }) ); 
 
+
+	menu->addChild( 
+		new BoolMenuItem( 
+			"Reverse loopers", 
+			[infinight]()
+			{ 
+				infinight->Reverse = !infinight->Reverse;
+				for( auto& looper : infinight->Loopers )
+				{
+					looper.Reverse();
+				} 
+			}, 
+			[infinight](){ return infinight->Reverse; }) ); 
 }
 
