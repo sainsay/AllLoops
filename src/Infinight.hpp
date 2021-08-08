@@ -17,6 +17,8 @@ DEF_FLAG_NOT_OP( InfinightFlags, int8_t)
 
 struct Infinight : rack::Module
 {
+	static const size_t LooperCount = 4;
+
 	enum ParamIds
 	{
 		MIX_PARAM,
@@ -51,7 +53,7 @@ struct Infinight : rack::Module
 		NUM_LIGHTS
 	};
 
-    std::array<sain::Looper, 4> Loopers = {	sain::Looper(2.5f), 
+    std::array<sain::Looper, LooperCount> Loopers = {	sain::Looper(2.5f), 
 											sain::Looper(2.3f),
 											sain::Looper(2.1f), 
 											sain::Looper(1.9f)};
@@ -59,9 +61,14 @@ struct Infinight : rack::Module
 	rack::dsp::BooleanTrigger ArmTrigger;
 	rack::dsp::BooleanTrigger ReverseTrigger;
 
+	rack::dsp::SlewLimiter ArmSlew;
+
 	InfinightFlags Flags = InfinightFlags::STATE_OK;
 
-	bool ArmState = true;
+	float samplerate;
+
+	bool ArmState = false;
+	bool PolyOut = false;
 
 	Infinight( );
 
@@ -78,5 +85,8 @@ struct Infinight : rack::Module
 struct InfinightWidget : rack::ModuleWidget
 {
 	InfinightWidget( Infinight* module );
+
+	void appendContextMenu(rack::Menu* menu) final;
+
 };
 
